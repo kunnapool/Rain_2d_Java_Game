@@ -36,15 +36,15 @@ public class Screen {
 	}
 	
 	public void render(int xoffset, int yoffset)
-	{		
+	{
 		for (int y=0;y<height;y++)
 		{
 			int yy=y+yoffset;
 			for (int x=0;x<width;x++)
 			{
 				int xx=x+xoffset;
-				int tileIndex=((xx/16)& MAP_SIZE-1) + ((yy/16)& MAP_SIZE-1)* MAP_SIZE; //size of tile is 32 pixels
-				pixels[x+y*width]=tiles[tileIndex];
+				//int tileIndex=((xx/16)& MAP_SIZE-1) + ((yy/16)& MAP_SIZE-1)* MAP_SIZE; //size of tile is 32 pixels
+				pixels[x+y*width]=Sprite.grass.pixels[ (x&15) + (y&15) * Sprite.grass.SIZE];
 			}
 		}
 	}

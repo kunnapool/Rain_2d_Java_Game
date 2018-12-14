@@ -128,10 +128,15 @@ public class Game extends Canvas implements Runnable {
 		key.update();
 		
 		if (key.up)
-			x++;
+			y--;
 		
 		if (key.down)
+			y++;
+		if (key.left)
 			x--;
+		
+		if (key.right)
+			x++;
 	}
 	
 	public void render()
@@ -165,6 +170,7 @@ public class Game extends Canvas implements Runnable {
 	
 	public static void main(String args[])
 	{
+		
 		/* create new game */
 		Game game = new Game();
 		
@@ -175,6 +181,8 @@ public class Game extends Canvas implements Runnable {
 		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //close when 'red x' is pressed
 		game.frame.setLocationRelativeTo(null); //center the screen
 		game.frame.setVisible(true);
+		
+		game.requestFocusInWindow(); //always focus on the game
 		
 		game.start();
 		
