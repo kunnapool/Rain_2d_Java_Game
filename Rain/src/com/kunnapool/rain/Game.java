@@ -1,7 +1,6 @@
 package com.kunnapool.rain;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -11,6 +10,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.kunnapool.rain.graphics.Screen;
+import com.kunnapool.rain.input.Keyboard;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -22,11 +22,19 @@ public class Game extends Canvas implements Runnable {
 	public static int width= 300;
 	public static int height= width/16 * 9;
 	public static int scale = 3;
+	private String title="Rain";
+	private boolean running = false;
+	int x=0, y=0;
+	
 	
 	private Thread thread;
 	private JFrame frame;
-	private boolean running = false;
+	private Keyboard key;
 	
+	
+	
+	
+
 	
 	private BufferedImage image= new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 	private int[] pixels= ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
@@ -40,8 +48,10 @@ public class Game extends Canvas implements Runnable {
 		setPreferredSize(size); //size of the canvas
 		
 		screen=new Screen(width, height);
-		
 		frame=new JFrame();
+		key=new Keyboard();
+		
+		addKeyListener(key); //canvas listens to keys
 	}
 	
 	
@@ -71,21 +81,57 @@ public class Game extends Canvas implements Runnable {
 	/* called by start() method */
 	public void run()
 	{
+		
+		long lastTime = System.nanoTime();
+		long timer=System.currentTimeMillis();
+		final double ns = (double)Math.pow(10, 9) / 60.0; //1 sec/60
+		long delta = 0;
+		int frames=0;
+		int updates=0;
+		
 		/* infinite game loop */
 		while(running)
 		{
-			/* update the logic */
-			update();
+			long now = System.nanoTime();
+			delta+=(now-lastTime); 
+			lastTime=now;
+			
+			
+			while(delta>=ns)
+			{
+				/* update the logic */
+				update();
+				updates++;
+				delta=0;
+				
+			}
 			
 			/* draw */
 			render();
+			frames++; //num of frames rendered
+			
+			/* once per second */
+			if(System.currentTimeMillis() - timer >1000)
+			{
+				timer+=1000;
+				System.out.println(updates+ " ups, "+frames+" fps,"+delta+" delta");
+				frame.setTitle(title+" | "+updates+ " ups, "+frames+" fps");
+				frames=0;
+				updates=0;
+			}
 		}
+		stop();
 	}
-	
 	
 	public void update()
 	{
+		key.update();
 		
+		if (key.up)
+			x++;
+		
+		if (key.down)
+			x--;
 	}
 	
 	public void render()
@@ -101,16 +147,13 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		screen.clear();
-		screen.render();
+		screen.render(x,y);
 		
 		for(int i=0;i<pixels.length;i++)
 			pixels[i]=screen.pixels[i];
 		
 		
 		Graphics g=bs.getDrawGraphics(); //get graphics from buffer
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		
 		g.drawImage(image, 0,0, getWidth(), getHeight(), null);
 		
 		
@@ -126,7 +169,7 @@ public class Game extends Canvas implements Runnable {
 		Game game = new Game();
 		
 		game.frame.setResizable(false);
-		game.frame.setTitle("Rain");
+//		game.frame.setTitle(game.title);
 		game.frame.add(game);
 		game.frame.pack(); //resize to preferred size
 		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //close when 'red x' is pressed
