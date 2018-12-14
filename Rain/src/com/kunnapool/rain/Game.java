@@ -81,6 +81,7 @@ public class Game extends Canvas implements Runnable {
 	/* called by start() method */
 	public void run()
 	{
+		requestFocus(); //focus on the window thread to detect key presses
 		
 		long lastTime = System.nanoTime();
 		long timer=System.currentTimeMillis();
@@ -128,15 +129,15 @@ public class Game extends Canvas implements Runnable {
 		key.update();
 		
 		if (key.up)
-			y--;
+			y++;
 		
 		if (key.down)
-			y++;
+			y--;
 		if (key.left)
-			x--;
+			x++;
 		
 		if (key.right)
-			x++;
+			x--;
 	}
 	
 	public void render()
@@ -181,8 +182,6 @@ public class Game extends Canvas implements Runnable {
 		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //close when 'red x' is pressed
 		game.frame.setLocationRelativeTo(null); //center the screen
 		game.frame.setVisible(true);
-		
-		game.requestFocusInWindow(); //always focus on the game
 		
 		game.start();
 		

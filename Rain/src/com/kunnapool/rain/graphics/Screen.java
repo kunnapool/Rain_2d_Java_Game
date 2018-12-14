@@ -2,11 +2,13 @@ package com.kunnapool.rain.graphics;
 
 import java.util.Random;
 
+import com.kunnapool.rain.level.tile.Tile;
+
 
 public class Screen {
 	
-	private int width;
-	private int height;
+	public int width;
+	public int height;
 	
 	private static final int MAP_SIZE = 16;
 	
@@ -36,15 +38,36 @@ public class Screen {
 	}
 	
 	public void render(int xoffset, int yoffset)
-	{
+	{	
 		for (int y=0;y<height;y++)
 		{
-			int yy=y+yoffset;
+			int yp= y+ yoffset ;
+			if(yp<0 || yp>=height)
+					continue;
 			for (int x=0;x<width;x++)
 			{
-				int xx=x+xoffset;
-				//int tileIndex=((xx/16)& MAP_SIZE-1) + ((yy/16)& MAP_SIZE-1)* MAP_SIZE; //size of tile is 32 pixels
-				pixels[x+y*width]=Sprite.grass.pixels[ (x&15) + (y&15) * Sprite.grass.SIZE];
+				int xp= x + xoffset;
+				if(xp<0 || xp>=width)
+						continue;
+
+				pixels[ xp + yp *width]=Sprite.grass.pixels[ (x & 15) + (y & 15) * Sprite.grass.SIZE];
+			}
+		}
+	}
+
+	public void renderTile(int xp, int yp, Tile tile)
+	{
+		for(int y=0;y<tile.sprite.SIZE;y++)
+		{
+			int ya=y+yp;
+			for(int x=0;x<tile.sprite.SIZE;x++)
+			{
+				int xa=x+xp;
+				
+				if (xa < 0 || xa >= width || ya < 0 || ya >= width)
+					break;
+				
+				pixels[xa+ya*width]=tile.sprite.pixels[x+y*tile.sprite.SIZE];
 			}
 		}
 	}
