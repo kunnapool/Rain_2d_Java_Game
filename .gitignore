@@ -21,6 +21,7 @@
 *.zip
 
 *.metadata
+*.recommenders
 
 # Logs and databases #
 ######################
