@@ -9,6 +9,7 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import com.kunnapool.rain.entity.mob.Player;
 import com.kunnapool.rain.graphics.Screen;
 import com.kunnapool.rain.input.Keyboard;
 import com.kunnapool.rain.level.Level;
@@ -26,7 +27,7 @@ public class Game extends Canvas implements Runnable {
 	public static int scale = 3;
 	private String title="Rain";
 	private boolean running = false;
-	int x=0, y=0;
+	
 	
 	
 	private Thread thread;
@@ -35,6 +36,7 @@ public class Game extends Canvas implements Runnable {
 	private Level level;
 	
 	
+	private Player player;
 	
 	
 
@@ -58,6 +60,7 @@ public class Game extends Canvas implements Runnable {
 		frame=new JFrame();
 		key=new Keyboard();
 		level=new RandomLevel(64, 64);
+		player=new Player(key);
 		
 		
 		addKeyListener(key); //canvas listens to keys
@@ -135,7 +138,6 @@ public class Game extends Canvas implements Runnable {
 			if(System.currentTimeMillis() - timer >1000)
 			{
 				timer+=1000;
-				System.out.println(updates+ " ups, "+frames+" fps,"+delta+" delta");
 				frame.setTitle(title+" | "+updates+ " ups, "+frames+" fps");
 				frames=0;
 				updates=0;
@@ -144,21 +146,14 @@ public class Game extends Canvas implements Runnable {
 		stop();
 	}
 	
+	
+//	int x=0, y=0;
+	
 	/* Update logic, usually 60 times a second */
 	public void update()
 	{
 		key.update();
-		
-		if (key.up && y>0 )
-			y--;
-		
-		if (key.down )
-			y++;
-		if (key.left && x>0)
-			x--;
-		
-		if (key.right)
-			x++;
+		player.update();
 	}
 	
 	
@@ -177,8 +172,12 @@ public class Game extends Canvas implements Runnable {
 		
 		screen.clear();
 		
+		int xScroll=player.x-screen.width/2;
+		int yScroll=player.y-screen.height/2;
+		
 		/* x,y acts as offset, however rendering still starts at 0,0 */
-		level.render(x, y, screen);
+		level.render(xScroll, yScroll, screen);
+		player.render(screen);
 		
 		/* copy what was rendered by screen.render() */
 		for(int i=0;i<pixels.length;i++)
@@ -189,6 +188,7 @@ public class Game extends Canvas implements Runnable {
 		Graphics g=bs.getDrawGraphics(); //get graphics from buffer
 		g.drawImage(image, 0,0, getWidth(), getHeight(), null);
 		
+		g.drawString("("+player.x+" ,"+player.y+")",0,16);
 		
 		g.dispose(); //like free
 		bs.show();

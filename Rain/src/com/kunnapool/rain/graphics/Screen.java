@@ -2,6 +2,7 @@ package com.kunnapool.rain.graphics;
 
 import java.util.Random;
 
+import com.kunnapool.rain.entity.mob.Player;
 import com.kunnapool.rain.level.tile.Tile;
 
 
@@ -73,7 +74,7 @@ public class Screen {
 		/* adjustment for movement */
 		xp-= xoffset;
 		yp-= yoffset;
-//		
+		
 		for(int y=0;y<tile.sprite.SIZE;y++)
 		{
 			int ya=y+yp; //absolute position of the tile on the screen
@@ -88,6 +89,32 @@ public class Screen {
 					xa=0;
 				
 				pixels[xa+ya*width]=tile.sprite.pixels[x+y*tile.sprite.SIZE];
+			}
+		}
+	}
+	
+	public void renderPlayer(int xp, int yp, Sprite sprite)
+	{
+		/* adjustment for movement */
+		xp-= xoffset;
+		yp-= yoffset;
+		
+		for(int y=0;y<16;y++)
+		{
+			int ya=y+yp; //absolute position of the tile on the screen
+			
+			for(int x=0;x<16;x++)
+			{
+				int xa=x+xp;
+				
+				if (xa < -16 || xa >= width || ya < 0 || ya >= height) break;
+					
+				if (xa<0)
+					xa=0;
+				int col=sprite.pixels[x+y*16];
+				if (col!=-327425)
+					pixels[xa+ya*width]=col;
+					
 			}
 		}
 	}

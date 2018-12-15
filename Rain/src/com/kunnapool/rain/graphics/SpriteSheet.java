@@ -15,7 +15,7 @@ public class SpriteSheet {
 	
 	
 	public static SpriteSheet tiles=new SpriteSheet("/textures/sheet.png",256);
-	
+	public static SpriteSheet itachi=new SpriteSheet("/textures/itachi.png",256);
 	
 	public SpriteSheet(String path, int size)
 	{
