@@ -26,7 +26,9 @@ public class SpriteSheet {
 		load();
 	}
 	
-	
+	/**
+	 * Load sprite sheet from memory
+	 */
 	private void load()
 	{
 		try

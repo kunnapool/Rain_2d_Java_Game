@@ -21,9 +21,15 @@ public class Tile {
 		this.size=sprite.SIZE;
 	}
 	
+	/**
+	 * Render tile onto the screen
+	 * @param x coordinate of where to render
+	 * @param y coordinate of where to render
+	 * @param screen
+	 */
 	public void render(int x, int y, Screen screen)
 	{
-		
+		screen.renderTile(x<<4, y<<4, this);
 	}
 	
 	protected boolean solid()

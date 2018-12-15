@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 
 import com.kunnapool.rain.graphics.Screen;
 import com.kunnapool.rain.input.Keyboard;
+import com.kunnapool.rain.level.Level;
+import com.kunnapool.rain.level.RandomLevel;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -30,32 +32,42 @@ public class Game extends Canvas implements Runnable {
 	private Thread thread;
 	private JFrame frame;
 	private Keyboard key;
+	private Level level;
 	
 	
 	
 	
 
-	
+	/* Read image and convert into a 'Raster'-- Integer representation of an image as pixels */
 	private BufferedImage image= new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 	private int[] pixels= ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 	
 	private Screen screen;
 	
 	
+	/**
+	 * Default constructor
+	 * Initializes the screen, frame and keyboard
+	 */
 	public Game()
 	{
-		Dimension size = new Dimension(width*scale, height*scale); //900 pixels wide
+		Dimension size = new Dimension(width*scale, height*scale); //Dimensions of the screen
 		setPreferredSize(size); //size of the canvas
 		
 		screen=new Screen(width, height);
 		frame=new JFrame();
 		key=new Keyboard();
+		level=new RandomLevel(64, 64);
+		
 		
 		addKeyListener(key); //canvas listens to keys
 	}
 	
 	
-	
+	/**
+	 * Starts the game thread -- makes a new thread, and starts it
+	 * Pass the frame into the new thread
+	 */
 	public synchronized void start()
 	{
 		
@@ -66,6 +78,10 @@ public class Game extends Canvas implements Runnable {
 		thread.start();
 	}
 	
+	
+	/**
+	 * Close the thread
+	 */
 	public synchronized void stop()
 	{
 		running=false;
@@ -78,7 +94,10 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 	
-	/* called by start() method */
+	/**
+	 * Called by start() method, runs the game
+	 * Controls render and update
+	 */
 	public void run()
 	{
 		requestFocus(); //focus on the window thread to detect key presses
@@ -93,11 +112,12 @@ public class Game extends Canvas implements Runnable {
 		/* infinite game loop */
 		while(running)
 		{
+			
 			long now = System.nanoTime();
-			delta+=(now-lastTime); 
+			delta+=(now-lastTime); //how long has it been  
 			lastTime=now;
 			
-			
+			/* Do stuff 60 times a second -- apporx. */
 			while(delta>=ns)
 			{
 				/* update the logic */
@@ -124,22 +144,25 @@ public class Game extends Canvas implements Runnable {
 		stop();
 	}
 	
+	/* Update logic, usually 60 times a second */
 	public void update()
 	{
 		key.update();
 		
-		if (key.up)
-			y++;
-		
-		if (key.down)
+		if (key.up && y>0 )
 			y--;
-		if (key.left)
-			x++;
+		
+		if (key.down )
+			y++;
+		if (key.left && x>0)
+			x--;
 		
 		if (key.right)
-			x--;
+			x++;
 	}
 	
+	
+	/* Draw everything on the screen */
 	public void render()
 	{
 		/* buffer to hold what to draw, before drawing */
@@ -153,10 +176,14 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		screen.clear();
-		screen.render(x,y);
 		
+		/* x,y acts as offset, however rendering still starts at 0,0 */
+		level.render(x, y, screen);
+		
+		/* copy what was rendered by screen.render() */
 		for(int i=0;i<pixels.length;i++)
 			pixels[i]=screen.pixels[i];
+		
 		
 		
 		Graphics g=bs.getDrawGraphics(); //get graphics from buffer
