@@ -11,9 +11,11 @@ import javax.swing.JFrame;
 
 import com.kunnapool.rain.entity.mob.Player;
 import com.kunnapool.rain.graphics.Screen;
+import com.kunnapool.rain.graphics.Sprite;
 import com.kunnapool.rain.input.Keyboard;
 import com.kunnapool.rain.level.Level;
 import com.kunnapool.rain.level.RandomLevel;
+import com.kunnapool.rain.level.SpawnLevel;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -59,7 +61,7 @@ public class Game extends Canvas implements Runnable {
 		screen=new Screen(width, height);
 		frame=new JFrame();
 		key=new Keyboard();
-		level=new RandomLevel(64, 64);
+		level=new SpawnLevel("/textures/level.png");
 		player=new Player(key);
 		
 		
@@ -98,7 +100,7 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	/**
-	 * Called by start() method, runs the game
+	 * Called by thread.start() method, runs the game
 	 * Controls render and update
 	 */
 	public void run()
@@ -175,7 +177,7 @@ public class Game extends Canvas implements Runnable {
 		int xScroll=player.x-screen.width/2;
 		int yScroll=player.y-screen.height/2;
 		
-		/* x,y acts as offset, however rendering still starts at 0,0 */
+		/* x,y act as offset, however rendering still starts at 0,0 */
 		level.render(xScroll, yScroll, screen);
 		player.render(screen);
 		
@@ -198,6 +200,7 @@ public class Game extends Canvas implements Runnable {
 	
 	public static void main(String args[])
 	{
+		System.out.println("Starting...");
 		
 		/* create new game */
 		Game game = new Game();
@@ -211,6 +214,8 @@ public class Game extends Canvas implements Runnable {
 		game.frame.setVisible(true);
 		
 		game.start();
+		
+		System.out.println("Stopping...");
 		
 
 	}

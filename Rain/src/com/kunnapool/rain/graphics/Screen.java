@@ -93,26 +93,33 @@ public class Screen {
 		}
 	}
 	
-	public void renderPlayer(int xp, int yp, Sprite sprite)
+	public void renderPlayer(int xp, int yp, Sprite sprite, int flip)
 	{
 		/* adjustment for movement */
 		xp-= xoffset;
 		yp-= yoffset;
 		
-		for(int y=0;y<16;y++)
+		for(int y=0;y<32;y++)
 		{
 			int ya=y+yp; //absolute position of the tile on the screen
+			int ys=y;
+			if (flip==2 || flip==3)
+				ys=31-y;
 			
-			for(int x=0;x<16;x++)
+			
+			for(int x=0;x<32;x++)
 			{
 				int xa=x+xp;
+				int xs=x;
+				if (flip==1 || flip==3)
+					xs=31-x;
 				
-				if (xa < -16 || xa >= width || ya < 0 || ya >= height) break;
+				if (xa < -32 || xa >= width || ya < 0 || ya >= height) break;
 					
 				if (xa<0)
 					xa=0;
-				int col=sprite.pixels[x+y*16];
-				if (col!=-327425)
+				int col=sprite.pixels[xs+y*32];
+				if (col!=0xFFFF00FF)
 					pixels[xa+ya*width]=col;
 					
 			}
