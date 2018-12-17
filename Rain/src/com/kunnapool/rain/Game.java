@@ -11,11 +11,9 @@ import javax.swing.JFrame;
 
 import com.kunnapool.rain.entity.mob.Player;
 import com.kunnapool.rain.graphics.Screen;
-import com.kunnapool.rain.graphics.Sprite;
 import com.kunnapool.rain.input.Keyboard;
 import com.kunnapool.rain.level.Level;
-import com.kunnapool.rain.level.RandomLevel;
-import com.kunnapool.rain.level.SpawnLevel;
+import com.kunnapool.rain.level.TileCoordinate;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -61,8 +59,10 @@ public class Game extends Canvas implements Runnable {
 		screen=new Screen(width, height);
 		frame=new JFrame();
 		key=new Keyboard();
-		level=new SpawnLevel("/textures/level.png");
-		player=new Player(key);
+		level=Level.spawn;
+		TileCoordinate player_spawn=new TileCoordinate(19, 62);
+		player=new Player(player_spawn.x(), player_spawn.y(), key);
+		player.init(level.spawn);
 		
 		
 		addKeyListener(key); //canvas listens to keys

@@ -14,9 +14,9 @@ public class SpriteSheet {
 	public int[] pixels;
 	
 	
-	public static SpriteSheet tiles=new SpriteSheet("/textures/sheet.png",256);
+	public static SpriteSheet tiles=new SpriteSheet("/textures/sheets/sheet.png",256);
 	public static SpriteSheet itachi=new SpriteSheet("/textures/itachi.png",256);
-	
+	public static SpriteSheet spawn_level=new SpriteSheet("/textures/sheets/spawn_level.png", 48);
 	
 	
 	public SpriteSheet(String path, int size)

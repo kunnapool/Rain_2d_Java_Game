@@ -9,12 +9,21 @@ public class Sprite {
 	
 	
 	
-	public static Sprite grass = new Sprite(16,0,0,SpriteSheet.tiles);
+	public static Sprite grass = new Sprite(16,0,4,SpriteSheet.tiles);
 	public static Sprite flower = new Sprite(16,1,0,SpriteSheet.tiles);
 	public static Sprite rock = new Sprite(16,2,0,SpriteSheet.tiles);
 	public static Sprite voidSprite= new Sprite(16, 0x0099ff);
 	
 	
+	//Spawn level sprites:
+	public static Sprite spwan_grass=new Sprite(16, 0,0, SpriteSheet.spawn_level);
+	public static Sprite spwan_hedge=new Sprite(16, 1,0, SpriteSheet.spawn_level);
+	public static Sprite spwan_water=new Sprite(16, 2,0, SpriteSheet.spawn_level);
+	public static Sprite spwan_wall1=new Sprite(16, 0,1, SpriteSheet.spawn_level);
+	public static Sprite spwan_wall2=new Sprite(16, 0,2, SpriteSheet.spawn_level);
+	public static Sprite spwan_floor=new Sprite(16, 1,1, SpriteSheet.spawn_level);
+	
+	//Player 
 	public static Sprite player_forward = new Sprite(32, 0, 5, SpriteSheet.tiles);
 	public static Sprite player_back = new Sprite(32, 2, 5, SpriteSheet.tiles);
 	public static Sprite player_side = new Sprite(32, 1, 5, SpriteSheet.tiles);
