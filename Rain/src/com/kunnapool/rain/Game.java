@@ -1,6 +1,7 @@
 package com.kunnapool.rain;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -12,6 +13,7 @@ import javax.swing.JFrame;
 import com.kunnapool.rain.entity.mob.Player;
 import com.kunnapool.rain.graphics.Screen;
 import com.kunnapool.rain.input.Keyboard;
+import com.kunnapool.rain.input.Mouse;
 import com.kunnapool.rain.level.Level;
 import com.kunnapool.rain.level.TileCoordinate;
 
@@ -66,6 +68,10 @@ public class Game extends Canvas implements Runnable {
 		
 		
 		addKeyListener(key); //canvas listens to keys
+		
+		Mouse mouse= new Mouse();
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
 	}
 	
 	
@@ -174,6 +180,7 @@ public class Game extends Canvas implements Runnable {
 		
 		screen.clear();
 		
+		/* position of player on screen */
 		int xScroll=player.x-screen.width/2;
 		int yScroll=player.y-screen.height/2;
 		
@@ -189,9 +196,9 @@ public class Game extends Canvas implements Runnable {
 		
 		Graphics g=bs.getDrawGraphics(); //get graphics from buffer
 		g.drawImage(image, 0,0, getWidth(), getHeight(), null);
-		
+		g.setColor(Color.WHITE);
 		g.drawString("("+player.x+" ,"+player.y+")",0,16);
-		
+		g.fillRect(Mouse.getX() -32, Mouse.getY() -32, 64, 64);
 		g.dispose(); //like free
 		bs.show();
 		

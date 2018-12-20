@@ -11,12 +11,19 @@ public abstract class Mob extends Entity {
 	
 	
 	/**
-	 * Changes how to mob moves by 1
+	 * Moves by 1
 	 * @param xa change in x
 	 * @param ya change in y
 	 */
 	public void move(int xa, int ya)
 	{
+		if(xa!=0 && ya!=0)
+		{
+			move(xa, 0);
+			move(0, ya);
+			return;
+		}
+		
 		/* Direction */
 		if (xa>0)
 			dir=1; //east
@@ -32,6 +39,7 @@ public abstract class Mob extends Entity {
 			x+=xa;
 			y+=ya;
 		}
+		
 
 	}
 	
@@ -42,7 +50,15 @@ public abstract class Mob extends Entity {
 	
 	private boolean collision(int xa, int ya)
 	{
-		return level.getTile( (x+xa)>>4, (y+ya)>>4).solid();
+		boolean solid = false;
+		for(int c=0;c<4;c++)
+		{
+			int xt = ((x+xa) +c % 2 * 12 - 7 )>>4;
+			int yt = ((y+ya) +c / 2 * 12 + 3 )>>4;
+			if ( level.getTile( xt, yt).solid() ) solid = true;
+
+		}
+		return solid;
 	}
 	
 	public void render()
